@@ -244,3 +244,9 @@ MCP 설정 파일에 아래 형식으로 추가:
 ## 문의
 
 이슈는 [GitHub Issues](https://github.com/cjLee-cmd/notebookLM-MCP/issues)에 등록해 주세요.
+
+---
+
+## 참고
+
+[NOTICE.md](./NOTICE.md) 참고 / 원본 프로젝트: [jacob-bd/notebooklm-mcp-cli](https://github.com/jacob-bd/notebooklm-mcp-cli) (MIT License)
