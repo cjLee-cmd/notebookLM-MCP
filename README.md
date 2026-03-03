@@ -52,41 +52,19 @@ curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/insta
 
 ## 설치 (Windows)
 
-Windows는 수동으로 진행합니다:
+CMD 또는 PowerShell에서 아래 명령어를 실행합니다:
 
-**1. uv 설치 (PowerShell):**
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-**2. 소스 다운로드:**
 ```bat
 git clone https://github.com/cjLee-cmd/notebookLM-MCP.git %USERPROFILE%\notebookLM-MCP
-cd %USERPROFILE%\notebookLM-MCP
-uv sync
+%USERPROFILE%\notebookLM-MCP\install.bat
 ```
 
-**3. Google 인증:**
-```bat
-uv run nlm login
-```
-
-**4. MCP 설정 — Claude Code (`%USERPROFILE%\.claude.json`):**
-```json
-"notebooklm": {
-  "type": "stdio",
-  "command": "uv",
-  "args": ["run", "--directory", "C:\\Users\\본인계정\\notebookLM-MCP", "notebooklm-mcp"]
-}
-```
-
-**5. MCP 설정 — Gemini / Cursor / Cline 등:**
-```json
-"notebooklm": {
-  "command": "C:\\Users\\본인계정\\notebookLM-MCP\\run_server.bat",
-  "args": []
-}
-```
+설치 스크립트가 자동으로 처리하는 것:
+1. `uv` 설치 (없을 경우)
+2. 의존성 설치
+3. **Claude Code MCP 자동 등록**
+4. **Gemini MCP 자동 등록** (설치된 경우)
+5. Google 계정 인증 (Chrome 팝업)
 
 ---
 
