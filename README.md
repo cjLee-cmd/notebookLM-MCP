@@ -1,7 +1,6 @@
 # NotebookLM MCP 래퍼
 
 > **작성자**: 이창준 / (주)파워솔루션
-> **이메일**: yeowoon72@inhatc.ac.kr
 > **라이선스**: [MIT License](./LICENSE) — 자유롭게 사용, 수정, 배포 가능
 > **사용 알림**: 법적 의무는 아니지만, 사용 시 작성자에게 알려주시면 감사합니다. ([NOTICE.md](./NOTICE.md) 참고)
 > **원본 프로젝트**: [jacob-bd/notebooklm-mcp-cli](https://github.com/jacob-bd/notebooklm-mcp-cli) (MIT License)
@@ -28,8 +27,7 @@ Copyright (c) 2026 이창준, (주)파워솔루션
 단, 사용 시 저작권 표시(`Copyright (c) 2026 이창준, (주)파워솔루션`)를 유지해 주세요.
 
 > **사용 알림 요청 (권고사항)**
-> 법적 의무는 아니지만, 사용하실 경우 **yeowoon72@inhatc.ac.kr** 로
-> 사용 목적과 기관명을 알려주시면 소프트웨어 개선에 큰 도움이 됩니다.
+> 법적 의무는 아니지만, 사용하실 경우 작성자에게 알려주시면 소프트웨어 개선에 큰 도움이 됩니다.
 
 ---
 
@@ -63,17 +61,13 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 uv --version
 ```
 
-### 2. 소스 코드 다운로드
+### 2. 래퍼 파일 다운로드
 
+이 저장소를 클론합니다:
 ```bash
-git clone https://github.com/jacob-bd/notebooklm-mcp-cli
-cd notebooklm-mcp-cli
-uv sync
+git clone https://github.com/cjLee-cmd/notebookLM-MCP.git
+cd notebookLM-MCP
 ```
-
-### 3. 래퍼 파일 다운로드
-
-이 저장소의 `notebooklm-mcp/` 폴더를 로컬에 저장합니다.
 
 ---
 
@@ -249,4 +243,4 @@ MCP 설정 파일에 아래 형식으로 추가:
 
 ## 문의
 
-사용 신고 및 문의: **yeowoon72@inhatc.ac.kr**
+이슈는 [GitHub Issues](https://github.com/cjLee-cmd/notebookLM-MCP/issues)에 등록해 주세요.
