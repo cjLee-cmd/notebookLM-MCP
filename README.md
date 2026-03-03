@@ -87,7 +87,7 @@ cd %USERPROFILE%\notebookLM-MCP && uv run nlm login
 
 ---
 
-## 사용 가능한 MCP 도구 (30개)
+## 사용 가능한 MCP 도구 (31개)
 
 | 분류 | 도구 | 설명 |
 |------|------|------|
@@ -104,6 +104,7 @@ cd %USERPROFILE%\notebookLM-MCP && uv run nlm login
 | 소스 | `source_list_drive` | Drive 소스 목록 |
 | 소스 | `source_sync_drive` | Drive 소스 동기화 |
 | 소스 | `source_delete` | 소스 삭제 |
+| 소스 | `source_rename` | 소스 이름 변경 |
 | 소스 | `source_describe` | 소스 AI 요약 |
 | 소스 | `source_get_content` | 소스 원문 조회 |
 | 리서치 | `research_start` | 웹 리서치 시작 |
