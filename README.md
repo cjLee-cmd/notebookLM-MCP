@@ -3,7 +3,6 @@
 > **작성자**: 이창준 / (주)파워솔루션
 > **라이선스**: [MIT License](./LICENSE) — 자유롭게 사용, 수정, 배포 가능
 > **사용 알림**: 법적 의무는 아니지만, 사용 시 작성자에게 알려주시면 감사합니다. ([NOTICE.md](./NOTICE.md) 참고)
-> **원본 프로젝트**: [jacob-bd/notebooklm-mcp-cli](https://github.com/jacob-bd/notebooklm-mcp-cli) (MIT License)
 
 ---
 
