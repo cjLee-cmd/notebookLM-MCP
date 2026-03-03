@@ -1,9 +1,19 @@
 #!/bin/bash
-# NotebookLM MCP 서버 실행 래퍼
-# 어떤 AI 도구(Claude Code, Gemini, Cursor 등)에서도 동일하게 사용 가능
+# NotebookLM MCP 서버 실행 래퍼 (macOS / Linux)
+# Copyright (c) 2026 이창준, (주)파워솔루션
+# MIT License
 
+# 이 스크립트가 있는 폴더 = 설치 루트
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_DIR="/Users/cjlee/Documents/Python/notebooklm-mcp-cli"
-UV="/opt/homebrew/bin/uv"
+PROJECT_DIR="$SCRIPT_DIR"
+
+# uv 경로 자동 탐지
+if [ -f "/opt/homebrew/bin/uv" ]; then
+    UV="/opt/homebrew/bin/uv"
+elif [ -f "$HOME/.local/bin/uv" ]; then
+    UV="$HOME/.local/bin/uv"
+else
+    UV="uv"
+fi
 
 exec "$UV" run --directory "$PROJECT_DIR" notebooklm-mcp "$@"

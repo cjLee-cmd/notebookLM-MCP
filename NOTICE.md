@@ -10,7 +10,7 @@
 이는 소프트웨어 개선과 사용 현황 파악에 도움이 됩니다.
 
 - **작성자**: 이창준 / (주)파워솔루션
-- **이메일**: yeowoon72@inhatc.ac.kr
+- **GitHub**: [cjLee-cmd](https://github.com/cjLee-cmd)
 
 ## 원본 프로젝트
 
