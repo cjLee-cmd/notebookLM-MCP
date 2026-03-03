@@ -30,176 +30,82 @@ Copyright (c) 2026 이창준, (주)파워솔루션
 
 ---
 
-## 파일 구성
+## 설치 (macOS / Linux)
 
+아래 한 줄을 터미널에서 실행하면 **모든 설정이 자동으로 완료**됩니다:
+
+```bash
+curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/install.sh | sh
 ```
-notebooklm-mcp/
-├── run_server.sh    ← macOS / Linux 실행 래퍼
-├── run_server.bat   ← Windows 실행 래퍼
-└── README.md        ← 이 파일
-```
+
+설치 스크립트가 자동으로 처리하는 것:
+1. `uv` 설치 (없을 경우)
+2. 소스 코드 다운로드 (`~/notebookLM-MCP`)
+3. 의존성 설치
+4. **Claude Code MCP 자동 등록** (`~/.claude.json`)
+5. **Gemini MCP 자동 등록** (설치된 경우)
+6. Google 계정 인증 (Chrome 팝업)
+
+설치 완료 후 Claude Code / Gemini를 **재시작**하면 바로 사용 가능합니다.
 
 ---
 
-## 사전 준비
+## 설치 (Windows)
 
-### 1. uv 설치 (Python 패키지 매니저)
+Windows는 수동으로 진행합니다:
 
-**macOS / Linux:**
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
-
-**Windows (PowerShell):**
+**1. uv 설치 (PowerShell):**
 ```powershell
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-설치 확인:
-```bash
-uv --version
-```
-
-### 2. 래퍼 파일 다운로드
-
-이 저장소를 클론합니다:
-```bash
-git clone https://github.com/cjLee-cmd/notebookLM-MCP.git
-cd notebookLM-MCP
-```
-
----
-
-## 실행 파일 경로 설정
-
-각자의 환경에 맞게 소스 경로를 수정해야 합니다.
-
-### macOS (`run_server.sh`)
-
-파일을 열어 `PROJECT_DIR` 경로를 본인 환경에 맞게 수정:
-```bash
-PROJECT_DIR="/Users/본인계정/Documents/Python/notebooklm-mcp-cli"
-```
-
-실행 권한 부여:
-```bash
-chmod +x run_server.sh
-```
-
-### Windows (`run_server.bat`)
-
-파일을 열어 `PROJECT_DIR` 경로를 본인 환경에 맞게 수정:
+**2. 소스 다운로드:**
 ```bat
-set PROJECT_DIR=C:\Users\본인계정\Documents\Python\notebooklm-mcp-cli
+git clone https://github.com/cjLee-cmd/notebookLM-MCP.git %USERPROFILE%\notebookLM-MCP
+cd %USERPROFILE%\notebookLM-MCP
+uv sync
 ```
 
----
-
-## Google 인증
-
-NotebookLM은 Google 계정 인증이 필요합니다.
-
-**최초 인증 (또는 만료 시):**
-
-macOS:
-```bash
-cd ~/Documents/Python/notebooklm-mcp-cli
+**3. Google 인증:**
+```bat
 uv run nlm login
 ```
 
-Windows:
-```bat
-cd %USERPROFILE%\Documents\Python\notebooklm-mcp-cli
-uv run nlm login
-```
-
-Chrome 브라우저가 자동으로 열리고, Google 계정으로 로그인하면 완료됩니다.
-
-> 인증은 약 1주일간 유지됩니다. 만료 시 MCP에서 `refresh_auth` 도구를 호출하면 자동으로 재인증됩니다.
-
----
-
-## AI 도구별 MCP 설정
-
-### Claude Code
-
-`~/.claude.json` 파일의 `mcpServers` 항목에 추가:
-
-**macOS:**
-```json
-"notebooklm": {
-  "type": "stdio",
-  "command": "/opt/homebrew/bin/uv",
-  "args": [
-    "run",
-    "--directory",
-    "/Users/본인계정/Documents/Python/notebooklm-mcp-cli",
-    "notebooklm-mcp"
-  ]
-}
-```
-
-**Windows:**
+**4. MCP 설정 — Claude Code (`%USERPROFILE%\.claude.json`):**
 ```json
 "notebooklm": {
   "type": "stdio",
   "command": "uv",
-  "args": [
-    "run",
-    "--directory",
-    "C:\\Users\\본인계정\\Documents\\Python\\notebooklm-mcp-cli",
-    "notebooklm-mcp"
-  ]
+  "args": ["run", "--directory", "C:\\Users\\본인계정\\notebookLM-MCP", "notebooklm-mcp"]
 }
 ```
 
-Claude Code 재시작 후 `/mcp` 명령으로 `notebooklm` 서버 확인.
-
----
-
-### Gemini (Antigravity)
-
-`~/.gemini/antigravity/mcp_config.json` 파일에 추가:
-
-**macOS:**
+**5. MCP 설정 — Gemini / Cursor / Cline 등:**
 ```json
 "notebooklm": {
-  "command": "/path/to/notebooklm-mcp/run_server.sh",
-  "args": [],
-  "disabled": false
-}
-```
-
-**Windows:**
-```json
-"notebooklm": {
-  "command": "C:\\path\\to\\notebooklm-mcp\\run_server.bat",
-  "args": [],
-  "disabled": false
+  "command": "C:\\Users\\본인계정\\notebookLM-MCP\\run_server.bat",
+  "args": []
 }
 ```
 
 ---
 
-### Cursor / Cline / 기타 MCP 지원 도구
+## 인증 만료 시
 
-MCP 설정 파일에 아래 형식으로 추가:
+MCP에서 `refresh_auth` 도구를 호출하면 자동으로 재인증됩니다.
+수동으로 재인증이 필요할 경우:
 
-**macOS:**
-```json
-"notebooklm": {
-  "command": "/path/to/notebooklm-mcp/run_server.sh",
-  "args": []
-}
+macOS/Linux:
+```bash
+cd ~/notebookLM-MCP && uv run nlm login
 ```
 
-**Windows:**
-```json
-"notebooklm": {
-  "command": "C:\\path\\to\\notebooklm-mcp\\run_server.bat",
-  "args": []
-}
+Windows:
+```bat
+cd %USERPROFILE%\notebookLM-MCP && uv run nlm login
 ```
+
+> 인증은 약 1주일간 유지됩니다.
 
 ---
 
