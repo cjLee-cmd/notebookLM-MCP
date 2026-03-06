@@ -28,7 +28,12 @@ if errorlevel 1 (
         exit /b 1
     )
     REM PATH 갱신
-    set "PATH=%USERPROFILE%\.local\bin;%PATH%"
+    set "PATH=%USERPROFILE%\.cargo\bin;%USERPROFILE%\.local\bin;%PATH%"
+)
+where uv >nul 2>&1
+if errorlevel 1 (
+    echo 오류: uv 설치 후에도 uv를 찾을 수 없습니다. 터미널을 재시작한 뒤 다시 실행하세요.
+    exit /b 1
 )
 echo ✓ uv 확인됨
 
@@ -64,7 +69,7 @@ if not errorlevel 1 (
 )
 if exist "%CLAUDE_JSON%" (
     echo ▶ Claude Code MCP 등록 중...
-    python -c "import json; f=open(r'%CLAUDE_JSON%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'type':'stdio','command':'uv','args':['run','--directory',r'%INSTALL_DIR%','notebooklm-mcp']}; f=open(r'%CLAUDE_JSON%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Claude Code MCP 등록 완료')"
+    uv run python -c "import json,os; p=r'%CLAUDE_JSON%'; d=json.load(open(p)); d.setdefault('mcpServers',{})['notebooklm']={'type':'stdio','command':'uv','args':['run','--directory',r'%INSTALL_DIR%'.replace(os.sep,'/'),'notebooklm-mcp']}; json.dump(d,open(p,'w'),indent=2,ensure_ascii=False); print('✓ Claude Code MCP 등록 완료')"
     if errorlevel 1 (
         echo ⚠ Claude Code MCP 자동 등록 실패. 수동으로 추가해 주세요.
     )
@@ -77,7 +82,7 @@ set CLAUDE_DESKTOP=%APPDATA%\Claude\claude_desktop_config.json
 if exist "%APPDATA%\Claude" (
     echo ▶ Claude Desktop MCP 등록 중...
     if not exist "%CLAUDE_DESKTOP%" echo {} > "%CLAUDE_DESKTOP%"
-    python -c "import json; f=open(r'%CLAUDE_DESKTOP%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'command':'uv','args':['run','--directory',r'%INSTALL_DIR%','notebooklm-mcp']}; f=open(r'%CLAUDE_DESKTOP%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Claude Desktop MCP 등록 완료')"
+    uv run python -c "import json,os; p=r'%CLAUDE_DESKTOP%'; d=json.load(open(p)); d.setdefault('mcpServers',{})['notebooklm']={'command':'uv','args':['run','--directory',r'%INSTALL_DIR%'.replace(os.sep,'/'),'notebooklm-mcp']}; json.dump(d,open(p,'w'),indent=2,ensure_ascii=False); print('✓ Claude Desktop MCP 등록 완료')"
     if errorlevel 1 (
         echo ⚠ Claude Desktop MCP 자동 등록 실패. 수동으로 추가해 주세요.
     )
@@ -90,7 +95,7 @@ set GEMINI_SETTINGS=%USERPROFILE%\.gemini\settings.json
 if exist "%USERPROFILE%\.gemini" (
     echo ▶ Gemini CLI MCP 등록 중...
     if not exist "%GEMINI_SETTINGS%" echo {} > "%GEMINI_SETTINGS%"
-    python -c "import json; f=open(r'%GEMINI_SETTINGS%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'command':r'%WRAPPER%','args':[]}; f=open(r'%GEMINI_SETTINGS%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Gemini CLI MCP 등록 완료')"
+    uv run python -c "import json; p=r'%GEMINI_SETTINGS%'; d=json.load(open(p)); d.setdefault('mcpServers',{})['notebooklm']={'command':r'%WRAPPER%','args':[]}; json.dump(d,open(p,'w'),indent=2,ensure_ascii=False); print('✓ Gemini CLI MCP 등록 완료')"
     if errorlevel 1 (
         echo ⚠ Gemini CLI MCP 자동 등록 실패. 수동으로 추가해 주세요.
     )

@@ -35,7 +35,7 @@ Copyright (c) 2026 이창준, (주)파워솔루션
 아래 한 줄을 터미널에서 실행하면 **모든 설정이 자동으로 완료**됩니다:
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/install.sh | bash
 ```
 
 설치 스크립트가 자동으로 처리하는 것:

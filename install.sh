@@ -4,7 +4,7 @@
 # MIT License
 #
 # 사용법:
-#   curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/install.sh | sh
+#   curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/install.sh | bash
 
 set -e
 
@@ -64,7 +64,7 @@ if command -v claude &>/dev/null || [ -f "$CLAUDE_JSON" ]; then
     if [ ! -f "$CLAUDE_JSON" ]; then
         echo '{}' > "$CLAUDE_JSON"
     fi
-    python3 - <<PYEOF
+    "$UV" run python - <<PYEOF
 import json
 path = '$CLAUDE_JSON'
 with open(path, 'r') as f:
@@ -93,7 +93,7 @@ if [ -n "$CLAUDE_DESKTOP" ] && [ -d "$(dirname "$CLAUDE_DESKTOP")" ]; then
     if [ ! -f "$CLAUDE_DESKTOP" ]; then
         echo '{}' > "$CLAUDE_DESKTOP"
     fi
-    python3 - <<PYEOF
+    "$UV" run python - <<PYEOF
 import json
 path = '''$CLAUDE_DESKTOP'''
 with open(path, 'r') as f:
@@ -116,18 +116,15 @@ if command -v gemini &>/dev/null || [ -d "$HOME/.gemini" ]; then
     if [ ! -f "$GEMINI_SETTINGS" ]; then
         echo '{}' > "$GEMINI_SETTINGS"
     fi
-    python3 - <<PYEOF
-import json, os
-
+    "$UV" run python - <<PYEOF
+import json
 path = '$GEMINI_SETTINGS'
 with open(path, 'r') as f:
     d = json.load(f)
-
 d.setdefault('mcpServers', {})['notebooklm'] = {
     "command": "$WRAPPER",
     "args": []
 }
-
 with open(path, 'w') as f:
     json.dump(d, f, indent=2, ensure_ascii=False)
 print("✓ Gemini CLI MCP 등록 완료: " + path)
