@@ -58,6 +58,10 @@ echo ✓ 의존성 설치 완료
 
 REM ── 5. Claude Code MCP 자동 등록 ──────────────────────────────
 set CLAUDE_JSON=%USERPROFILE%\.claude.json
+where claude >nul 2>&1
+if not errorlevel 1 (
+    if not exist "%CLAUDE_JSON%" echo {} > "%CLAUDE_JSON%"
+)
 if exist "%CLAUDE_JSON%" (
     echo ▶ Claude Code MCP 등록 중...
     python -c "import json; f=open(r'%CLAUDE_JSON%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'type':'stdio','command':'uv','args':['run','--directory',r'%INSTALL_DIR%','notebooklm-mcp']}; f=open(r'%CLAUDE_JSON%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Claude Code MCP 등록 완료')"
@@ -68,16 +72,30 @@ if exist "%CLAUDE_JSON%" (
     echo - Claude Code 미설치 (건너뜀^)
 )
 
-REM ── 6. Gemini MCP 자동 등록 ───────────────────────────────────
-set GEMINI_MCP=%USERPROFILE%\.gemini\antigravity\mcp_config.json
-if exist "%GEMINI_MCP%" (
-    echo ▶ Gemini MCP 등록 중...
-    python -c "import json; f=open(r'%GEMINI_MCP%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'command':r'%WRAPPER%','args':[],'disabled':False}; f=open(r'%GEMINI_MCP%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Gemini MCP 등록 완료')"
+REM ── 5b. Claude Desktop MCP 자동 등록 ────────────────────────────
+set CLAUDE_DESKTOP=%APPDATA%\Claude\claude_desktop_config.json
+if exist "%APPDATA%\Claude" (
+    echo ▶ Claude Desktop MCP 등록 중...
+    if not exist "%CLAUDE_DESKTOP%" echo {} > "%CLAUDE_DESKTOP%"
+    python -c "import json; f=open(r'%CLAUDE_DESKTOP%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'command':'uv','args':['run','--directory',r'%INSTALL_DIR%','notebooklm-mcp']}; f=open(r'%CLAUDE_DESKTOP%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Claude Desktop MCP 등록 완료')"
     if errorlevel 1 (
-        echo ⚠ Gemini MCP 자동 등록 실패. 수동으로 추가해 주세요.
+        echo ⚠ Claude Desktop MCP 자동 등록 실패. 수동으로 추가해 주세요.
     )
 ) else (
-    echo - Gemini 미설치 (건너뜀^)
+    echo - Claude Desktop 미설치 (건너뜀^)
+)
+
+REM ── 6. Gemini CLI MCP 자동 등록 ─────────────────────────────────
+set GEMINI_SETTINGS=%USERPROFILE%\.gemini\settings.json
+if exist "%USERPROFILE%\.gemini" (
+    echo ▶ Gemini CLI MCP 등록 중...
+    if not exist "%GEMINI_SETTINGS%" echo {} > "%GEMINI_SETTINGS%"
+    python -c "import json; f=open(r'%GEMINI_SETTINGS%','r'); d=json.load(f); f.close(); d.setdefault('mcpServers',{})['notebooklm']={'command':r'%WRAPPER%','args':[]}; f=open(r'%GEMINI_SETTINGS%','w'); json.dump(d,f,indent=2,ensure_ascii=False); f.close(); print('✓ Gemini CLI MCP 등록 완료')"
+    if errorlevel 1 (
+        echo ⚠ Gemini CLI MCP 자동 등록 실패. 수동으로 추가해 주세요.
+    )
+) else (
+    echo - Gemini CLI 미설치 (건너뜀^)
 )
 
 REM ── 7. Google 계정 인증 ───────────────────────────────────────
@@ -91,9 +109,10 @@ echo ======================================
 echo  설치 완료!
 echo ======================================
 echo.
-echo ✓ 설치 경로  : %INSTALL_DIR%
-echo ✓ Claude Code: 자동 등록됨 (설치된 경우)
-echo ✓ Gemini     : 자동 등록됨 (설치된 경우)
+echo ✓ 설치 경로    : %INSTALL_DIR%
+echo ✓ Claude Code  : 자동 등록됨 (설치된 경우)
+echo ✓ Claude Desktop: 자동 등록됨 (설치된 경우)
+echo ✓ Gemini CLI   : 자동 등록됨 (설치된 경우)
 echo.
 echo ▶ 다음 단계:
 echo   1. Claude Code / Gemini 를 재시작하세요.

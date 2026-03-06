@@ -43,8 +43,9 @@ curl -LsSf https://raw.githubusercontent.com/cjLee-cmd/notebookLM-MCP/main/insta
 2. 소스 코드 다운로드 (`~/notebookLM-MCP`)
 3. 의존성 설치
 4. **Claude Code MCP 자동 등록** (`~/.claude.json`)
-5. **Gemini MCP 자동 등록** (설치된 경우)
-6. Google 계정 인증 (Chrome 팝업)
+5. **Claude Desktop MCP 자동 등록** (설치된 경우)
+6. **Gemini CLI MCP 자동 등록** (`~/.gemini/settings.json`, 설치된 경우)
+7. Google 계정 인증 (Chrome 팝업)
 
 설치 완료 후 Claude Code / Gemini를 **재시작**하면 바로 사용 가능합니다.
 
@@ -63,8 +64,9 @@ git clone https://github.com/cjLee-cmd/notebookLM-MCP.git %USERPROFILE%\notebook
 1. `uv` 설치 (없을 경우)
 2. 의존성 설치
 3. **Claude Code MCP 자동 등록**
-4. **Gemini MCP 자동 등록** (설치된 경우)
-5. Google 계정 인증 (Chrome 팝업)
+4. **Claude Desktop MCP 자동 등록** (설치된 경우)
+5. **Gemini CLI MCP 자동 등록** (설치된 경우)
+6. Google 계정 인증 (Chrome 팝업)
 
 ---
 

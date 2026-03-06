@@ -60,57 +60,80 @@ chmod +x "$WRAPPER"
 
 # ── 6. Claude Code MCP 자동 등록 ─────────────────────────────────
 CLAUDE_JSON="$HOME/.claude.json"
-MCP_ENTRY=$(cat <<EOF
-{
-  "type": "stdio",
-  "command": "$UV",
-  "args": ["run", "--directory", "$INSTALL_DIR", "notebooklm-mcp"]
-}
-EOF
-)
-
-if [ -f "$CLAUDE_JSON" ]; then
-    # mcpServers 키가 있는지 확인
-    if python3 -c "import json; d=json.load(open('$CLAUDE_JSON')); exit(0 if 'mcpServers' in d else 1)" 2>/dev/null; then
-        # notebooklm 키가 이미 있으면 덮어쓰기, 없으면 추가
-        python3 - <<PYEOF
+if command -v claude &>/dev/null || [ -f "$CLAUDE_JSON" ]; then
+    if [ ! -f "$CLAUDE_JSON" ]; then
+        echo '{}' > "$CLAUDE_JSON"
+    fi
+    python3 - <<PYEOF
 import json
-with open('$CLAUDE_JSON', 'r') as f:
+path = '$CLAUDE_JSON'
+with open(path, 'r') as f:
     d = json.load(f)
 d.setdefault('mcpServers', {})['notebooklm'] = {
     "type": "stdio",
     "command": "$UV",
     "args": ["run", "--directory", "$INSTALL_DIR", "notebooklm-mcp"]
 }
-with open('$CLAUDE_JSON', 'w') as f:
+with open(path, 'w') as f:
     json.dump(d, f, indent=2, ensure_ascii=False)
-print("✓ Claude Code MCP 등록 완료: $CLAUDE_JSON")
+print("✓ Claude Code MCP 등록 완료: " + path)
 PYEOF
-    else
-        echo "⚠ $CLAUDE_JSON 에 mcpServers 키가 없습니다. 수동으로 추가해 주세요."
-    fi
 else
-    echo "⚠ $CLAUDE_JSON 파일이 없습니다. Claude Code 설치 후 수동으로 추가해 주세요."
+    echo "- Claude Code 미설치 (건너뜀)"
 fi
 
-# ── 7. Gemini MCP 자동 등록 ──────────────────────────────────────
-GEMINI_MCP="$HOME/.gemini/antigravity/mcp_config.json"
-if [ -f "$GEMINI_MCP" ]; then
+# ── 6b. Claude Desktop MCP 자동 등록 ────────────────────────────
+CLAUDE_DESKTOP=""
+if [ "$(uname)" = "Darwin" ]; then
+    CLAUDE_DESKTOP="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
+elif [ "$(uname)" = "Linux" ]; then
+    CLAUDE_DESKTOP="$HOME/.config/Claude/claude_desktop_config.json"
+fi
+if [ -n "$CLAUDE_DESKTOP" ] && [ -d "$(dirname "$CLAUDE_DESKTOP")" ]; then
+    if [ ! -f "$CLAUDE_DESKTOP" ]; then
+        echo '{}' > "$CLAUDE_DESKTOP"
+    fi
     python3 - <<PYEOF
 import json
-with open('$GEMINI_MCP', 'r') as f:
+path = '''$CLAUDE_DESKTOP'''
+with open(path, 'r') as f:
     d = json.load(f)
 d.setdefault('mcpServers', {})['notebooklm'] = {
-    "command": "$WRAPPER",
-    "args": [],
-    "disabled": False
+    "command": "$UV",
+    "args": ["run", "--directory", "$INSTALL_DIR", "notebooklm-mcp"]
 }
-with open('$GEMINI_MCP', 'w') as f:
+with open(path, 'w') as f:
     json.dump(d, f, indent=2, ensure_ascii=False)
-print("✓ Gemini MCP 등록 완료: $GEMINI_MCP")
+print("✓ Claude Desktop MCP 등록 완료: " + path)
 PYEOF
 else
-    echo "- Gemini 미설치 (건너뜀)"
+    echo "- Claude Desktop 미설치 (건너뜀)"
+fi
+
+# ── 7. Gemini CLI MCP 자동 등록 ────────────────────────────────────
+GEMINI_SETTINGS="$HOME/.gemini/settings.json"
+if command -v gemini &>/dev/null || [ -d "$HOME/.gemini" ]; then
+    if [ ! -f "$GEMINI_SETTINGS" ]; then
+        echo '{}' > "$GEMINI_SETTINGS"
+    fi
+    python3 - <<PYEOF
+import json, os
+
+path = '$GEMINI_SETTINGS'
+with open(path, 'r') as f:
+    d = json.load(f)
+
+d.setdefault('mcpServers', {})['notebooklm'] = {
+    "command": "$WRAPPER",
+    "args": []
+}
+
+with open(path, 'w') as f:
+    json.dump(d, f, indent=2, ensure_ascii=False)
+print("✓ Gemini CLI MCP 등록 완료: " + path)
+PYEOF
+else
+    echo "- Gemini CLI 미설치 (건너뜀)"
 fi
 
 # ── 8. Google 계정 인증 ───────────────────────────────────────────
@@ -124,9 +147,10 @@ echo "======================================"
 echo " 설치 완료!"
 echo "======================================"
 echo ""
-echo "✓ 설치 경로  : $INSTALL_DIR"
-echo "✓ Claude Code: ~/.claude.json 자동 등록됨"
-echo "✓ Gemini     : $GEMINI_MCP (설치된 경우 자동 등록됨)"
+echo "✓ 설치 경로   : $INSTALL_DIR"
+echo "✓ Claude Code : ~/.claude.json (설치된 경우 자동 등록됨)"
+echo "✓ Claude Desktop: ~/Library/.../claude_desktop_config.json (설치된 경우 자동 등록됨)"
+echo "✓ Gemini CLI  : ~/.gemini/settings.json (설치된 경우 자동 등록됨)"
 echo ""
 echo "▶ 다음 단계:"
 echo "  1. Claude Code / Gemini 를 재시작하세요."
